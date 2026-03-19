@@ -169,7 +169,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-checkpoint/
+checkpoint/*
 eval_log/
 ablation_log/
 res_*/
@@ -177,6 +177,8 @@ cache_dir/*
 res_*.json
 *.whl
 *__pycache__
-backbones/
+backbones/*
 assets/
 eval_temp/
+
+logs_multi_gpu/*

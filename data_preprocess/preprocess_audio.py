@@ -1,4 +1,4 @@
-from videollava.model.multimodal_encoder.whisper import WhisperSpeechTower
+from avere.model.multimodal_encoder.whisper import WhisperSpeechTower
 import json
 import os
 import soundfile as sf

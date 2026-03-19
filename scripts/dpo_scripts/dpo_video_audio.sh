@@ -3,7 +3,7 @@ VIDEO_FOLDER="/wekafs/ict/achaubey/emotion_reasoning/audio_exp/data_video"
 AUDIO_FOLDER="/wekafs/ict/achaubey/emotion_reasoning/audio_exp/data"
 INSTRUCTION_DATA_FOLDER="/wekafs/ict/achaubey/emotion_reasoning/audio_exp/data/instruction_data"
 
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 HF_DATASETS_OFFLINE=1 TRANSFORMERS_OFFLINE=1 deepspeed --master_port=29503 videollava/train/dpo_train.py \
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 HF_DATASETS_OFFLINE=1 TRANSFORMERS_OFFLINE=1 deepspeed --master_port=29503 avere/train/dpo_train.py \
     --deepspeed ./scripts/zero2.json \
     --model_name_or_path ./checkpoints/avere_base \
     --dpo_alpha 1.0 --beta 0.1 --gamma 0 --tpd_gamma 0.2 --use_tpd True \

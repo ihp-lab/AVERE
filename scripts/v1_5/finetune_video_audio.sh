@@ -1,10 +1,10 @@
-JSON_FOLDER="/wekafs/ict/achaubey/emotion_reasoning/data/videollava/train_json"
-IMAGE_FOLDER="/wekafs/ict/achaubey/emotion_reasoning/data/videollava"
+JSON_FOLDER="/wekafs/ict/achaubey/emotion_reasoning/data/avere/train_json"
+IMAGE_FOLDER="/wekafs/ict/achaubey/emotion_reasoning/data/avere"
 VIDEO_FOLDER="/wekafs/ict/achaubey/emotion_reasoning/audio_exp/data_video"
 AUDIO_FOLDER="/wekafs/ict/achaubey/emotion_reasoning/audio_exp/data"
 INSTRUCTION_DATA_FOLDER="/wekafs/ict/achaubey/emotion_reasoning/audio_exp/data/instruction_data"
 
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 HF_DATASETS_OFFLINE=1 TRANSFORMERS_OFFLINE=1 deepspeed --master_port=29500 videollava/train/train_mem.py \
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 HF_DATASETS_OFFLINE=1 TRANSFORMERS_OFFLINE=1 deepspeed --master_port=29500 avere/train/train_mem.py \
     --deepspeed ./scripts/zero2_offload.json \
     --model_name_or_path ./backbones/Video-LLaVA-7B \
     --version v1 \

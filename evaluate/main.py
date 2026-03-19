@@ -135,6 +135,8 @@ def _evaluate(args):
     ## create temp path for saving results
     prompt_type_suffix = "_desc" if args.eval_prompt_type == "description" else ""
     version_suffix = f"_{args.version}" if args.task.startswith("emotion_qa-emorealm") else ""
+    if args.model_path.endswith("/"):
+        args.model_path = args.model_path[:-1]
     if re.search(r"/checkpoint-\d+", args.model_path):
         # If the model path contains a checkpoint, we will use the second last part of the path as the model name
         temp_eval_path = os.path.join(EVAL_TEMP_DIR, args.task+prompt_type_suffix+version_suffix, args.model_path.split("/")[-2]+"/"+args.model_path.split("/")[-1])

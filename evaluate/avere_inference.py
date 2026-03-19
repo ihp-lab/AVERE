@@ -1,11 +1,11 @@
 import os
 import torch
 import glob, os, tqdm, re, json, logging
-from videollava.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_AUDIO_TOKEN, AUDIO_TOKEN_INDEX
-from videollava.conversation import conv_templates, SeparatorStyle
-from videollava.model.builder import load_pretrained_model
-from videollava.utils import disable_torch_init
-from videollava.mm_utils import tokenizer_image_token, tokenizer_audio_token, tokenizer_audio_and_image_token, get_model_name_from_path, KeywordsStoppingCriteria
+from avere.constants import IMAGE_TOKEN_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_AUDIO_TOKEN, AUDIO_TOKEN_INDEX
+from avere.conversation import conv_templates, SeparatorStyle
+from avere.model.builder import load_pretrained_model
+from avere.utils import disable_torch_init
+from avere.mm_utils import tokenizer_image_token, tokenizer_audio_token, tokenizer_audio_and_image_token, get_model_name_from_path, KeywordsStoppingCriteria
 
 from utils import strip_trailing_unk, strip_end_tag, chunk_path_list
 

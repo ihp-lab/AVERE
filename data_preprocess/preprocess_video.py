@@ -1,4 +1,4 @@
-from videollava.model.multimodal_encoder.languagebind.video.processing_video import LanguageBindVideoProcessor
+from avere.model.multimodal_encoder.languagebind.video.processing_video import LanguageBindVideoProcessor
 import json
 import os
 import soundfile as sf
