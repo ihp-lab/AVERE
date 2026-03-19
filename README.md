@@ -59,7 +59,11 @@ Please find the detailed results and Leaderboard for EmoReAlM benchmark at our p
 
 ```bash
 ├── avere/                 # Main source code for AVERE
-├── backbones/             # Folder to store backbone models such as LanguageBind Encoders, Whisper Encoder and BERT-base-uncased model
+├── backbones/             # Folder to download backbone models such as LanguageBind Encoders, Whisper Encoder and BERT-base-uncased model. See Inference step-1 below.
+├────── bert-base-uncased
+├────── LanguageBind_Image
+├────── LanguageBind_Video_merge
+├────── whisper-large-v3
 ├── checkpoint/            # Folder to store the main model weights of AVERE
 ├── data_preprocess/       # Data preprocessing code base which preprocesses data and generates training data
 ├── evaluate/              # Evaluation codebase to compute metrics 
@@ -105,7 +109,7 @@ Please find the detailed results and Leaderboard for EmoReAlM benchmark at our p
 5. **Install other libraries**:
     ```bash
     pip install flash-attn --no-build-isolation ## recommended but not required
-    pip install decord opencv-python git+https://github.com/facebookresearch/pytorchvideo.git@28fe037d212663c6a24f373b94cc5d478c8c1a1d
+    pip install decord soundfile opencv-python git+https://github.com/facebookresearch/pytorchvideo.git@28fe037d212663c6a24f373b94cc5d478c8c1a1d
     ```
 
 
@@ -113,49 +117,103 @@ Please find the detailed results and Leaderboard for EmoReAlM benchmark at our p
 
 ## 🎯 Inference
 
-1. Download the model weights from [huggingface](https://huggingface.co/chaubeyG/FaceLLaVA) inside `checkpoints/` folder so that the structure becomes - `./checkpoints/FaceLLaVA`.
+1. Download [LanguageBind_Image](https://huggingface.co/LanguageBind/LanguageBind_Image), [LanguageBind_Video_merge](https://huggingface.co/LanguageBind/LanguageBind_Video_merge), [bert-base-uncased](https://huggingface.co/google-bert/bert-base-uncased), and [whisper-large-v3](https://huggingface.co/openai/whisper-large-v3) inside the folder `backbones/`.
 
-2. Crop the input image/video using `tools/crop_face.py` before further processing. 
+2. Download the model weights from [huggingface](https://huggingface.co/chaubeyG/AVERE-7B) inside `checkpoint/` folder so that the structure becomes - `./checkpoint/AVERE-7B`.
 
-    Use the following command to crop an image
-
-    ```python
-    python crop_face.py \
-        --mode image \
-        --image_path "/path/to/input.jpg" \
-        --output_image_path "/path/to/output_cropped.jpg"
-    ```
-
-    Use the following command to crop a video
-    ```python
-    python crop_face.py \
-        --mode video \
-        --video_path "/path/to/input/video.mp4" \
-        --output_video_path "/path/to/output/cropped_video.mp4" \
-        --temp_dir "/path/to/temp"
-    ```
-
-3. Run the following command for inference.
+3. Run the following script to perform single video inference
 
     ```bash
-    CUDA_VISIBLE_DEVICES=0 python inference.py --model_path="./checkpoints/FaceLLaVA" \
-    --file_path="./assets/demo_inputs/face_attr_example_1.png" --prompt="What are the facial attributes in the given image?"
+    CUDA_VISIBLE_DEVICES=0 python infer.py \
+        --video_path "/path/to/input.mp4" \
+        --prompt "Describe the emotion of the person in the video in detail."
     ```
 
-4. **Currently the following face perception tasks are supported along with the best modality suited for that task - Emotion(Video), Age(Image), Facial Attributes(Image), Facial Action Units(Image)**
+    Use the `--no_audio` flag in the script to run inference using only the video.
 
-5. A list of prompts that work well for different tasks is present in `./assets/good_prompts`.
+## Evaluation
+
+1. Perform steps 1. and 2. of the Inference above to download the weights of backbones and AVERE.
+
+2. Create a parent data directory for downloading the datasets and update the `VIDEO_EVAL_DATA_PAR` inside `evaluate/eval_constants.py` to this path.
+
+3. Download EmoReAlM dataset from HuggingFace at [chaubeyG/EmoReAlM](https://huggingface.co/datasets/chaubeyG/EmoReAlM). Place it inside your parent data directory.
+
+4. Download the DFEW dataset from its [official website](https://dfew-dataset.github.io/). You also need to process the videos in DFEW to 24 FPS and the audios to 16KHz. 
+
+5. [Optional] Download the speech part of the RAVDESS dataset from [Zenodo](https://zenodo.org/records/1188976) and process and organize it as shown in the following point. This is only required if you want to run evaluation on RAVDESS.
+
+6. The data directory should look like the following after the downloads.
+
+    <details>
+    <summary> Data directory structure </summary>
+
+    ``` bash
+    EmoReAlM/                                  # EmoReAlM benchmark (HuggingFace)
+    └── emorealm_v1.json
+
+    dfew/                                      # DFEW dataset (processed)
+    ├── dfew_annotation/
+    │   └── test(single-labeled)/
+    │       └── set_1.csv                      # Original set-1 test set
+    ├── dfew_original_clips_24fps/
+    │   ├── part_1/
+    │   │   └── 1.mp4                          # Video converted to 24fps
+    │   ├── ...
+    │   └── part_11/
+    └── dfew_original_clips_16khz/
+        ├── part_1/
+        │   └── 1.wav                          # 16kHz mono PCM 16-LE
+        ├── ...
+        └── part_11/
+
+    RAVDESS/                                   # RAVDESS dataset (processed) (Required only if you want to run evaluation on RAVDESS) 
+    ├── ravdess_videos_24fps/
+    │   ├── Actor_01/
+    │   │   └── 01-01-01-01-01-01-01.mp4       # Video converted to 24fps
+    │   ├── ...
+    │   └── Actor_24/
+    └── ravdess_videos_16khz/
+        ├── Actor_01/
+        │   └── 01-01-01-01-01-01-01.wav       # 16kHz mono PCM 16-LE
+        ├── ...
+        └── Actor_24/
+    ```
+    </details>
+
+7. Run the evaluation script as following
+
+    ```bash
+    CUDA_VISIBLE_DEVICES=0 python evaluate/main.py \
+        --model_path "checkpoint/AVERE-7B" \
+        --task "emotion_qa-emorealm" # tasks can be emotion_qa-emorealm, emotion-dfew-audio, and emotion-ravdess-video-audio
+        --batch_size 1 # always use batch size of 1 for EmoReAlM and larger batch sizes for DFEW and RAVDESS. We use 8 batch size using H100.
+    ```
+
+    In case you have more than 1 GPUs available for inference, please use the following script to launch inference on multiple GPUs.
+
+    ```bash
+    bash scripts/eval.sh \
+        --gpus 2,4,6 \ # specify the physical GPU IDs here
+        --task emotion_qa-emorealm # tasks can be emotion_qa-emorealm, emotion-dfew-audio, and emotion-ravdess-video-audio
+        --batch 1 # always use batch size of 1 for EmoReAlM and larger batch sizes for DFEW and RAVDESS. We use 8 batch size using H100.
+    ```
+
+8. Model responses and metrics are saved inside `eval_temp/{task_name}/AVERE-7B`. After performing the evaluation above, you should see number very close to those reported for *"Our Base + AVEm-DPO"* in the paper.
 
 ### ✅ Repository Progress
 
-- [x] Dataset Release
+- [ ] Training data and instruction
+- [ ] Training code and instructions
 - [x] Training Script
+- [x] Evaluation Code
 - [x] Inference Code
 - [x] Model Weights 
+- [x] Benchmark Release
 
 ## ⚖️ License
 
-This codebase is distributed under the USC Research license. See [LICENSE.rst](LICENSE.rst) for more details. This repo uses parts of code from the [VideoLLaVA](https://github.com/PKU-YuanGroup/Video-LLaVA) repo and our codebase inherit their license for those.
+This codebase is distributed under the USC Research license. See [LICENSE.rst](LICENSE.rst) for more details. This repo uses parts of code from the [Face-LLaVA](https://github.com/ihp-lab/Face-LLaVA/) and [VideoLLaVA](https://github.com/PKU-YuanGroup/Video-LLaVA) repositories and our codebase inherit their license for those.
 
 ## 🙌 Credits
 
@@ -164,10 +222,12 @@ This codebase builds upon the following excellent works: [VideoLLaVA](https://gi
 ## 🪶 Citation
 
 ```latex
-@article{chaubey2025face,
-  title={Face-LLaVA: Facial Expression and Attribute Understanding through Instruction Tuning},
-  author={Chaubey, Ashutosh and Guan, Xulang and Soleymani, Mohammad},
-  journal={IEEE/CVF Winter Conference on Applications of Computer Vision 2026},
-  year={2025}
+@inproceedings{
+chaubey2026avere,
+title={{AVERE}: Improving Audiovisual Emotion Reasoning with Preference Optimization},
+author={Ashutosh Chaubey and Jiacheng Pang and Maksim Siniukov and Mohammad Soleymani},
+booktitle={The Fourteenth International Conference on Learning Representations},
+year={2026},
+url={https://openreview.net/forum?id=td682AAuPr}
 }
 ```

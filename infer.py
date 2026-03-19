@@ -2,8 +2,8 @@
 Single-video inference script for AVERE.
 
 Usage:
-    python infer.py --model_path <path> --video_path <path> --prompt "Describe the emotion."
-    python infer.py --model_path <path> --video_path <path> --prompt "..." --no_audio
+    python infer.py --video_path <path> --prompt "Describe the emotion."
+    python infer.py --video_path <path> --prompt "..." --no_audio
 """
 
 import os
@@ -90,7 +90,7 @@ def resample_video_24fps(video_path: str, out_video: str) -> None:
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Single-video inference with AVERE.")
-    parser.add_argument("--model_path", required=True,
+    parser.add_argument("--model_path", required=False, default="./checkpoint/AVERE-7B",
                         help="Path to the AVERE model checkpoint.")
     parser.add_argument("--model_base", default=None,
                         help="Optional base model path (for LoRA / delta weights).")
