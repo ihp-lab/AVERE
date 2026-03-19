@@ -337,7 +337,7 @@ We gratefully acknowledge their contributions to the open-source community.
         <strong>Face-LLaVA</strong>
       </a>
       <br>
-      <em>WACV 2026</em>
+      <em>WACV 2026 🌵</em>
       <br><br>
       A multimodal large language model for fine-grained facial understanding, leveraging face-specific visual encoders for improved expression and attribute reasoning.
       <br><br>
@@ -350,7 +350,7 @@ We gratefully acknowledge their contributions to the open-source community.
         <strong>MoD-DPO</strong>
       </a>
       <br>
-      <em>CVPR 2026</em>
+      <em>CVPR 2026 ⛰️</em>
       <br><br>
       A preference optimization approach to mitigate cross-modal hallucinations in omni-LLMs, enabling more faithful alignment between visual, audio, and textual modalities.
       <br><br>
