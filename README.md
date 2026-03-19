@@ -328,6 +328,41 @@ We gratefully acknowledge their contributions to the open-source community.
 
 ---
 
+## 🔗 Other Works
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <a href="https://face-llava.github.io/">
+        <strong>Face-LLaVA</strong>
+      </a>
+      <br>
+      <em>WACV 2026</em>
+      <br><br>
+      A multimodal large language model for fine-grained facial understanding, leveraging face-specific visual encoders for improved expression and attribute reasoning.
+      <br><br>
+      <a href="https://face-llava.github.io/">
+        <img src="https://img.shields.io/badge/Website-face--llava.github.io-6f42c1?logo=googlechrome&logoColor=white" alt="Face-LLaVA Website">
+      </a>
+    </td>
+    <td align="center" width="50%">
+      <a href="https://mod-dpo.github.io/">
+        <strong>MoD-DPO</strong>
+      </a>
+      <br>
+      <em>CVPR 2026</em>
+      <br><br>
+      A preference optimization approach to mitigate cross-modal hallucinations in omni-LLMs, enabling more faithful alignment between visual, audio, and textual modalities.
+      <br><br>
+      <a href="https://mod-dpo.github.io/">
+        <img src="https://img.shields.io/badge/Website-mod--dpo.github.io-6f42c1?logo=googlechrome&logoColor=white" alt="MoD-DPO Website">
+      </a>
+    </td>
+  </tr>
+</table>
+
+---
+
 ## 🪶 Citation
 
 If you find AVERE or EmoReAlM useful in your research, please cite:
