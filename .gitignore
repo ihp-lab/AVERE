@@ -178,7 +178,6 @@ res_*.json
 *.whl
 *__pycache__
 backbones/*
-assets/
 eval_temp/
 
 logs_multi_gpu/*
